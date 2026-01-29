@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "quantum-orchestrating-poc"
+version = "1.0.0"
+description = "Asynchronous quantum circuit execution system using Temporal"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "app"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0"}
+sqlalchemy = "^2.0.23"
+psycopg2-binary = "^2.9.9"
+temporalio = "^1.5.1"
+qiskit = "^0.45.0"
+qiskit-aer = "^0.13.0"
+pydantic = "^2.5.0"
+slowapi = "^0.1.9"
+python-json-logger = "^2.0.7"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-mock = "^3.12.0"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.25.1"
+
+[tool.poetry.scripts]
+worker = "app.temporal.worker:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
