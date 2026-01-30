@@ -42,7 +42,6 @@ Activities → Qiskit → Results → PostgreSQL
 ### Prerequisites
 
 - Docker and Docker Compose
-- (Optional) Python 3.11+ and Poetry for local development
 
 ### Running with Docker Compose
 
@@ -245,23 +244,11 @@ Configuration is done via environment variables in `docker-compose.yml`. For loc
 
 ### Running Tests
 
-**Using Docker (Recommended):**
+**Using Docker:**
 ```bash
 # Build and run all tests
 docker-compose --profile test build test
 docker-compose --profile test run --rm test
-```
-
-**Using Poetry (Local Development):**
-```bash
-# Fast Tests (unit, API, workflow, activity):
-poetry run pytest tests/test_unit.py tests/test_api.py tests/test_workflows.py tests/test_activities.py tests/test_quantum.py
-
-# Integration Tests:
-poetry run pytest tests/test_integration.py -m integration
-
-# All Tests:
-poetry run pytest
 ```
 
 ### Test Structure
@@ -272,57 +259,6 @@ poetry run pytest
 - `tests/test_workflows.py`: Temporal workflow tests
 - `tests/test_activities.py`: Temporal activity tests
 - `tests/test_integration.py`: End-to-end integration tests
-
-## Development Setup
-
-### Prerequisites
-
-- Python 3.11+
-- Poetry (install from https://python-poetry.org/docs/#installation)
-- Docker and Docker Compose (for PostgreSQL and Temporal Server)
-
-### Local Development
-
-1. Install Poetry (if not already installed):
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
-
-2. Install dependencies:
-```bash
-poetry install
-```
-
-3. Activate Poetry shell:
-```bash
-poetry shell
-```
-
-4. (Optional) Set up environment variables:
-```bash
-# Create .env file if you want to override docker-compose.yml settings
-# Otherwise, environment variables are already configured in docker-compose.yml
-```
-
-5. Start PostgreSQL and Temporal Server:
-```bash
-docker-compose up db temporal-server temporal-ui -d
-```
-
-6. Initialize database:
-```bash
-poetry run python -c "from app.core.database import init_db; init_db()"
-```
-
-7. Run API server:
-```bash
-poetry run uvicorn app.main:app --reload
-```
-
-8. Run worker (in separate terminal):
-```bash
-poetry run python -m app.temporal.worker
-```
 
 ## Project Structure
 
