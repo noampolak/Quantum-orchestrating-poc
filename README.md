@@ -438,10 +438,3 @@ docker-compose logs worker-1
 2. Verify worker is connected to Temporal Server
 3. Check that workflows and activities are registered
 
-## License
-
-[Add your license here]
-
-## Contributing
-
-[Add contributing guidelines here]
