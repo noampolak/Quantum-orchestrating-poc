@@ -6,6 +6,7 @@ from typing import Optional
 from uuid import UUID as UUIDType
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Query, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -17,7 +18,6 @@ from app.core.schemas import (
     TaskListResponse,
     TaskListItem,
     TaskDeleteResponse,
-    ErrorResponse,
 )
 from app.temporal.client import get_temporal_client
 from app.temporal.workflows import QuantumCircuitWorkflow
@@ -166,9 +166,12 @@ async def get_task(
             "Task not found",
             extra={"task_id": str(task_id)},
         )
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found.",
+            content={
+                "status": "error",
+                "message": "Task not found.",
+            },
         )
 
     if task.status == TaskStatus.COMPLETED:

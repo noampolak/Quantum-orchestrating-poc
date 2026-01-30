@@ -1,10 +1,7 @@
 """Integration tests for full end-to-end flow."""
 
 import pytest
-import time
-import asyncio
-from unittest.mock import patch, AsyncMock
-from app.core.models import TaskStatus
+from unittest.mock import patch
 from app.temporal.activities import execute_quantum_circuit_activity
 
 
@@ -30,7 +27,6 @@ async def test_full_workflow_flow(client, db_session, sample_qasm3):
     # Step 2: Execute the activity directly to simulate worker execution
     # In a real environment, a Temporal worker would pick this up
     # For integration tests, we execute it directly
-    from app.core.database import get_db_context
     from contextlib import contextmanager
     
     @contextmanager
@@ -69,7 +65,6 @@ async def test_task_lifecycle(client, db_session, sample_qasm3):
     assert response.json()["status"] == "pending"
 
     # Execute activity to simulate worker execution
-    from app.core.database import get_db_context
     from contextlib import contextmanager
     
     @contextmanager

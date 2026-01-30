@@ -1,7 +1,6 @@
 """Shared pytest fixtures for testing."""
 
 import pytest
-import os
 import tempfile
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

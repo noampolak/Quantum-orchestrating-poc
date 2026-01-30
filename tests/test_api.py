@@ -1,6 +1,5 @@
 """API endpoint tests with mocked Temporal client."""
 
-import pytest
 from unittest.mock import AsyncMock, patch
 from fastapi import status
 
@@ -57,7 +56,9 @@ def test_get_task_not_found(client, db_session):
     response = client.get(f"/tasks/{task_id}")
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert "not found" in response.json()["detail"].lower()
+    data = response.json()
+    assert data["status"] == "error"
+    assert "not found" in data["message"].lower()
 
 
 def test_get_task_pending(client, sample_task):

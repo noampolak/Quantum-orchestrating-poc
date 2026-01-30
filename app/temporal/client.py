@@ -2,6 +2,7 @@
 
 import os
 import logging
+from typing import Optional
 from temporalio.client import Client
 
 logger = logging.getLogger(__name__)
@@ -11,7 +12,7 @@ TEMPORAL_SERVER_ADDRESS = os.getenv("TEMPORAL_SERVER_ADDRESS", "localhost:7233")
 TEMPORAL_NAMESPACE = os.getenv("TEMPORAL_NAMESPACE", "default")
 
 # Global client instance
-_client: Client = None
+_client: Optional[Client] = None
 
 
 async def get_temporal_client() -> Client:

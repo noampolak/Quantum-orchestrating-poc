@@ -64,7 +64,7 @@ This will start:
 - **Temporal Server** on `localhost:7233`
 - **2 Worker instances** for task processing
 
-4. Access the API:
+3. Access the API:
 - API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
 - Temporal UI: http://localhost:8088
@@ -80,9 +80,11 @@ Submit a quantum circuit for execution.
 curl -X POST http://localhost:8000/tasks \
   -H "Content-Type: application/json" \
   -d '{
-    "qc": "OPENQASM 3.0; include \"stdgates.inc\"; qubit[2] q; h q[0]; cx q[0], q[1];"
+    "qc": "OPENQASM 3.0; qubit[2] q; bit[2] c; h q[0]; cx q[0], q[1]; c[0] = measure q[0]; c[1] = measure q[1];"
   }'
 ```
+
+**Note:** The `include "stdgates.inc";` statement is optional and will be automatically handled by the parser.
 
 **Response:**
 ```json
@@ -116,6 +118,22 @@ curl http://localhost:8000/tasks/123e4567-e89b-12d3-a456-426614174000
 {
   "status": "completed",
   "result": {"00": 512, "11": 512}
+}
+```
+
+**Response (Failed):**
+```json
+{
+  "status": "failed",
+  "message": "Task execution failed."
+}
+```
+
+**Response (Not Found - 404):**
+```json
+{
+  "status": "error",
+  "message": "Task not found."
 }
 ```
 
@@ -156,7 +174,7 @@ curl "http://localhost:8000/tasks?status=completed&limit=10&offset=0"
 
 ### DELETE /tasks/{task_id}
 
-Delete a task. If the task is pending, the workflow will be cancelled.
+Delete a task. If the task is pending or running, the associated Temporal workflow will be cancelled before deletion.
 
 **Request:**
 ```bash
@@ -193,11 +211,11 @@ curl http://localhost:8000/health
 
 ## QASM3 Format
 
-The system accepts quantum circuits in OpenQASM 3.0 format. Example:
+The system accepts quantum circuits in OpenQASM 3.0 format. The system automatically handles standard gate definitions, so `include` statements are optional and will be automatically processed.
 
+**Example:**
 ```qasm
 OPENQASM 3.0;
-include "stdgates.inc";
 
 qubit[2] q;
 bit[2] c;
@@ -208,6 +226,8 @@ cx q[0], q[1]; // CNOT gate
 c[0] = measure q[0];
 c[1] = measure q[1];
 ```
+
+**Note:** If you include `include "stdgates.inc";` in your QASM3, it will be automatically stripped and standard gates (h, x, y, z, s, sdg, t, tdg, cx) will be injected automatically by the parser.
 
 ## Configuration
 
@@ -225,18 +245,22 @@ Configuration is done via environment variables in `docker-compose.yml`. For loc
 
 ### Running Tests
 
-**Fast Tests** (unit, API, workflow, activity):
+**Using Docker (Recommended):**
 ```bash
+# Build and run all tests
+docker-compose --profile test build test
+docker-compose --profile test run --rm test
+```
+
+**Using Poetry (Local Development):**
+```bash
+# Fast Tests (unit, API, workflow, activity):
 poetry run pytest tests/test_unit.py tests/test_api.py tests/test_workflows.py tests/test_activities.py tests/test_quantum.py
-```
 
-**Integration Tests** (requires full Docker Compose stack):
-```bash
+# Integration Tests:
 poetry run pytest tests/test_integration.py -m integration
-```
 
-**All Tests:**
-```bash
+# All Tests:
 poetry run pytest
 ```
 

@@ -5,7 +5,6 @@ from unittest.mock import patch
 from contextlib import contextmanager
 from app.temporal.activities import execute_quantum_circuit_activity
 from app.core.models import Task, TaskStatus
-from app.core.database import get_db_context
 
 
 @pytest.mark.asyncio

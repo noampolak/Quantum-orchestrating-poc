@@ -3,6 +3,7 @@
 import logging
 import time
 from typing import Dict
+from uuid import UUID
 from temporalio import activity
 
 from app.core.database import get_db_context
@@ -48,7 +49,9 @@ async def execute_quantum_circuit_activity(task_id: str, qasm3_string: str) -> D
     try:
         # Load task from database
         with get_db_context() as db:
-            task = db.query(Task).filter(Task.id == task_id).first()
+            # Convert task_id string to UUID for type safety
+            task_uuid = UUID(task_id)
+            task = db.query(Task).filter(Task.id == task_uuid).first()
             if not task:
                 raise ValueError(f"Task {task_id} not found")
 
@@ -107,7 +110,9 @@ async def execute_quantum_circuit_activity(task_id: str, qasm3_string: str) -> D
         # Mark task as failed in database
         try:
             with get_db_context() as db:
-                task = db.query(Task).filter(Task.id == task_id).first()
+                # Convert task_id string to UUID for type safety
+                task_uuid = UUID(task_id)
+                task = db.query(Task).filter(Task.id == task_uuid).first()
                 if task:
                     task.status = TaskStatus.FAILED
                     db.commit()
