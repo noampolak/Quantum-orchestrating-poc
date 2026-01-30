@@ -374,3 +374,18 @@ docker-compose logs worker-1
 2. Verify worker is connected to Temporal Server
 3. Check that workflows and activities are registered
 
+### Images
+
+##### API
+<img width="1440" height="718" alt="image" src="https://github.com/user-attachments/assets/c55c9963-3474-4d8f-9658-e80dd2e623a8" />
+
+##### Temporal
+<img width="1379" height="672" alt="image" src="https://github.com/user-attachments/assets/4fea6a78-b241-4fda-adaa-9e02c1726668" />
+
+<img width="1440" height="755" alt="image" src="https://github.com/user-attachments/assets/20359bf2-bd58-47fe-8904-14991f3bbb27" />
+
+<img width="1440" height="761" alt="image" src="https://github.com/user-attachments/assets/a9cb0926-3574-4cdf-aa23-c2361e500697" />
+
+
+
+
